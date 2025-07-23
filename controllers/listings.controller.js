@@ -1,0 +1,56 @@
+const express = require('express')
+const router = express.Router()
+const isSignedIn = require('../middleware/is-signed-in')
+const Listing = require('../models/listing')
+
+// NEW LISTING FORM
+router.get('/new', isSignedIn, (req, res) => {
+  res.render('listings/new.ejs')
+})
+// POST FORM DATA TO DATABASE
+router.post('/', isSignedIn, async (req, res) => {
+  try {
+    req.body.seller = req.session.user._id
+    await Listing.create(req.body)
+    res.redirect('/listings')
+  } catch (error) {
+    console.log(error)
+    res.send('Something went wrong')
+  }
+})
+
+// VIEW ALL LISTINGS
+router.get('/', async (req, res) => {
+  try {
+    const foundListings = await Listing.find()
+    res.render('listings/index.ejs', { foundListings: foundListings })
+  } catch (err) {
+    console.log(err)
+    res.send('Something went wrong')
+  }
+})
+
+// VIEW A SINGLE LISTING
+router.get('/:listingId', async (req, res) => {
+  try {
+    const foundListing = await Listing.findById(req.params.listingId).populate('seller')
+    res.render('listings/show.ejs', { foundListing })
+  } catch (error) {
+    console.log(error)
+    res.redirect('/listings')
+  }
+})
+
+// DELETE LISTING FROM DATABASE
+router.delete('/:listingId', isSignedIn, async (req, res) => {
+  const foundListing = await Listing.findById(req.params.listingId).populate('seller')
+
+  if (foundListing.seller._id.equals(req.session.user._id)) {
+    await foundListing.deleteOne()
+    return res.redirect('/listings')
+  }
+
+  return res.send('Not authorized')
+})
+
+module.exports = router

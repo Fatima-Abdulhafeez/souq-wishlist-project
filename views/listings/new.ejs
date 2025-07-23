@@ -1,0 +1,38 @@
+<%- include('../partials/head') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <title>Wishlist</title>
+</head>
+<body>
+     
+<form action="/listings" method="POST" class="container mt-4" style="max-width: 600px;">
+  <h2 class="mb-4">Add Product</h2>
+
+  <div class="mb-3">
+    <label for="title" class="form-label">Name</label>
+    <input type="text" name="name" id="name" class="form-control" required />
+  </div>
+
+   <div class="mb-3">
+    <label for="price" class="form-label">Price (BHD)</label>
+    <input type="number" name="price" id="price" class="form-control" min="0" required />
+  </div> 
+  
+  <div class="mb-3">
+    <label for="image" class="form-label">Image URL</label>
+    <input type="text" name="image" id="image" class="form-control" />
+  </div>
+
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <textarea name="description" id="description" class="form-control" rows="3" required></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Add</button>
+</form>
+</body>
+</html>
